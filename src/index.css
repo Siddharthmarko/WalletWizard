@@ -1,0 +1,19 @@
+.cardStyle {
+    height: 300px;
+    width: 100%;
+    object-fit: cover;
+}
+
+.buyStyle {
+    color: rgb(0, 224, 93);
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0px 10px;
+}
+
+.BorrowStyle {
+    color: rgb(0, 149, 224);
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0px 10px;
+}
