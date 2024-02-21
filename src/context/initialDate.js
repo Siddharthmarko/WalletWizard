@@ -12,8 +12,11 @@ export const initially = {
     isDeleteModal: false,
     profit: 0,
     expense: 0,
-    datafilter: { dummyDates },
+    datefilter: { ...dummyDates },
     calculate: { "Profit": 0, "Expense": 0 },
     update: null,
     typeData: [],
+    data:[],
+    detail: [],
+    updateState: false,
 }

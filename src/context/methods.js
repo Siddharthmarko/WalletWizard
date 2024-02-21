@@ -1,6 +1,6 @@
 import { Category } from "../component/compo/utils";
 
-export function setChartLevel(data){
+export function setChartLevel(data){ 
     const ChartLavel = data ? data.map(({ amount, category, type }) => {
         // issue: if category, amount, type is null 
         const selectedMethod = Category.find(item => item.value === Number(category));
@@ -36,7 +36,6 @@ export function setOutputArray(ChartLavel){
 
     return outputArray;
 }
-
 export function details(outputArray){
     const Details = outputArray[0] ? outputArray.map((e, i) => {
         const data = {
@@ -46,7 +45,7 @@ export function details(outputArray){
     }) : []
     return details;
 }
-export function result(){
+export function setResult(updatedObj){
     const result = updatedObj.reduce((acc, cur) => {
         if (cur.type === 1) {
             acc.profit.push(cur);
