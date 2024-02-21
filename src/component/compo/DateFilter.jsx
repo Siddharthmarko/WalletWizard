@@ -26,15 +26,16 @@ const rangePresets = [
 ];
 
 const DateFilter = () => {
-    const {dispatcher} = useData();
+    const {state, dispatcher} = useData();
     
     const onRangeChange = (dates, dateStrings) => {
         if (dates) {
-            dispatcher({ type: 'datafilter', obj: {
+            dispatcher({ type: 'datefilter', obj: {
                 "startDate": dateStrings[0],
                 "endDate": dateStrings[1]
             }} 
             )
+            console.log(state.datefilter);
         } 
     };
     return (

@@ -1,15 +1,15 @@
-import {Tag,  Button, Row, Col, Input } from 'antd';
+import { Tag, Button, Row, Col, Input, message } from 'antd';
 import moment from 'moment/moment';
 import { Method, Category } from './utils';
-import { TbEdit } from "react-icons/tb";
 import { BiTrash } from "react-icons/bi";
 import { useData } from '../../context/context';
+import { deleteData } from "../../context/operation";
 
 export default function getMainColumn(){
-    const {dispatcher} = useData();
-    function showDeleteModal (id){
-        // it will deltefrom server
-        console.log('delte id');
+    const {state, dispatcher} = useData();
+    function showDeleteModal(id) {
+        deleteData(id);
+        dispatcher({type: 'updateState'});
     }
     return [
         {
@@ -42,7 +42,7 @@ export default function getMainColumn(){
             align: "center",
             ellipsis: true,
             render: (payto) => {
-                const selectedMethod = typeData[0] ? typeData.find(item => item.value === payto) : null
+                const selectedMethod = state.typeData[0] ? state.typeData.find(item => item.value === payto) : null
                 return (<>{selectedMethod && (<>{selectedMethod.label}</>)}</>)
             }
         },
@@ -91,11 +91,6 @@ export default function getMainColumn(){
             width: "50px",
             align: "center",
             render: (e) => (<Row gutter={[8, 8]} justify="space-around">
-                <Col>
-                    <Button size='small' type='text' shape='circle' onClick={() => dispatcher({type: 'update', id: e._id})}>
-                        <TbEdit className='fs-6' />
-                    </Button>
-                </Col>
                 <Col>
                     <Button size='small' type='text' shape='circle' onClick={() => {
                         console.log(e);

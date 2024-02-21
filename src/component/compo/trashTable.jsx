@@ -3,13 +3,16 @@ import moment from 'moment/moment';
 import { BiTrash } from "react-icons/bi";
 import { Method, Category } from './utils';
 import { BiRevision } from "react-icons/bi";
+import { useData } from '../../context/context';
+import { Recycle, hardDelete } from '../../context/operation';
 
-export default function getTrashTable(){
-    function handleHardDelete(id){  
-        console.log('handleHardDelete')
+export default function getTrashTable(typeData){
+    const { dispatcher}  = useData();
+    function handleHardDelete(e){  
+        hardDelete(e, dispatcher);
     }
-    function handleRecycle(id){  
-        console.log('handleRecycle')
+    function handleRecycle(e){  
+       Recycle(e, dispatcher);
     }
     return [
         {
@@ -23,7 +26,7 @@ export default function getTrashTable(){
             dataIndex: 'description',
             key: 'description',
             width: "auto",
-            render: (description) => (<Input value={description} bordered={false} />)
+            render: (description) => (<Input value={description}  />)
         },
         {
             title: 'Date',

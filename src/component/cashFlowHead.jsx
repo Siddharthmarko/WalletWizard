@@ -13,7 +13,7 @@ export default function CashFlow(){
                             <div style={{ color: "gray", fontSize: "14px" }}>
                                 Income
                             </div>
-                            + {state.Profit} ₹
+                            + {state.profit} ₹
 
                         </div>
                     </Col>
@@ -22,7 +22,7 @@ export default function CashFlow(){
                             <div style={{ color: "gray", fontSize: "14px" }}>
                                 Expense
                             </div>
-                            - {state.Expense} ₹
+                            - {state.expense} ₹
                         </div>
                     </Col>
                     <Col style={{ width: "200px" }}>
@@ -32,11 +32,11 @@ export default function CashFlow(){
                             </div>
                             {state.Profit > state.Expense ?
                                 <span className='text-primary'>
-                                    {state.Profit - state.Expense}
+                                    {state.profit - state.expense}
                                 </span>
                                 :
                                 <span className='text-danger'>
-                                    -{state.Expense - state.Profit} <ArrowDownOutlined />
+                                    -{state.expense - state.profit} <ArrowDownOutlined />
                                 </span>
                             }
                         </div>

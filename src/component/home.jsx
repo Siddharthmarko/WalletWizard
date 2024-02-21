@@ -1,20 +1,21 @@
+import axios from "axios";
 import { Table, Modal, Drawer } from "antd";
 import Header from "./header";
 import CashFlow from "./cashFlowHead";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import getMainColumn from "./compo/mainTable";
 import { useData } from "../context/context";
 import AddExpense from "./drawer/AddExpense";
 import AddType from "./drawer/AddType";
-import TopCharts from "./modal/TopCharts";
 import Trash from "./modal/Trash";
-import Update from "./modal/Update";
+import {  getExpenseType } from "../context/operation";
+import { details, setChartLevel, setOutputArray, setResult } from "../context/methods";
+
+const BASE_URL = process.env.BASE_URL;
 
 export default function Home(){
     const {state, dispatcher} = useData();
-    const [data, setData] = useState([]); // by fetching
     const columns = getMainColumn();
-    
     function handleOk(){
         dispatcher({type: 'update', id: null});
         dispatcher({ type: 'closeAll' });
@@ -22,8 +23,40 @@ export default function Home(){
     }
     function handleDeleteModal(){
         dispatcher({ type: 'isisDeleteModal'});
+        getExpenseType(dispatcher);
     }
 
+    const fetchData = () => {
+        getExpenseType(dispatcher);
+        axios.post(`${BASE_URL}/expense-data-filter`, state.datefilter)
+        .then((res) => {
+            const newObj = res.data;
+            const updateObj = newObj[0] ? newObj.map((e, i) => {
+                const obj = { ...e, "no": i + 1 }
+                return obj;
+            }) : [];
+            dispatcher({ type: 'data', data: updateObj });
+
+            // console.log(updateObj)
+            dispatcher({ type: 'loading'});
+            const charLevel = setChartLevel(updateObj);
+            const outputArray = setOutputArray(charLevel);
+            const detail = details(outputArray);
+
+            dispatcher({type: 'detail', data: detail});
+            const result = setResult(updateObj);
+
+            const Profit = result.profit.reduce((acc, cur) => acc + parseInt(cur.amount), 0);
+            const Expense = result.loss.reduce((acc, cur) => acc + parseInt(cur.amount), 0);
+
+            dispatcher({type: 'profit', data: Profit});
+            dispatcher({type: 'expense', data: Expense});
+            
+            dispatcher({ type: 'loading'});
+        }).catch((err) => console.log(err));
+    }
+    useEffect(() => fetchData(), []);
+    useEffect(() => fetchData(), [state.updateState]);
     return (
         <>
           <Header/>
@@ -34,7 +67,7 @@ export default function Home(){
                     bordered
                     columns={columns}
                     loading={state.loading}
-                    dataSource={data}
+                    dataSource={state.data}
                     size='small'
                     className='shadow-sm bg-white'
                     pagination={{
@@ -49,7 +82,7 @@ export default function Home(){
                 open={state.isModal}
                 key={'add-expense-drawer'}
             >
-                <AddExpense handleOk={handleOk} typeData={state.typeData} />
+                <AddExpense handleOk={handleOk} />
             </Drawer>
             <Drawer
                 title="Payment To "
@@ -61,15 +94,6 @@ export default function Home(){
             >
                 <AddType handleOk={handleOk} />
             </Drawer>
-            <Modal
-                title="Expense View"
-                footer={null}
-                open={state.isPay}
-                onCancel={handleOk}
-                width="700px"
-            >
-                <TopCharts/>
-            </Modal>
             <Modal 
                 title="Delete"
                 open={state.isDeleteModal}
@@ -89,14 +113,6 @@ export default function Home(){
             >   
                 <Trash value={state.trashData} />
             </Drawer>
-            <Modal 
-                title="Update Expense" 
-                open={state.update}
-                footer={null}
-                onCancel={handleOk}
-            >   
-                <Update handleOk={handleOk} id={state.update} />
-            </Modal>
         </>
     )
 }

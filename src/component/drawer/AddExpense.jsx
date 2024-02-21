@@ -1,41 +1,28 @@
 import React, { useEffect, useState } from 'react'
 import { Select, Switch, Row, Breadcrumb, Col, Input, DatePicker, InputNumber, Button, Card, message } from 'antd';
-import axios from 'axios';
 import { Method, Category } from '../compo/utils';
 import dayjs from 'dayjs';
-// import BASE_URL from './url'
+import { useData } from '../../context/context';
+import { submitExpensedata } from '../../context/operation';
 
 const { TextArea } = Input;
+const dummyData = { "date": null, "method": null, "payto": null, "category": null, "amount": null, "description": null, "type": 0, "tag": null }
 
 const categoryList = Category
 
-const AddExpense = ({ handleOk, typeData }) => {
-
-    const [formData, setFormData] = useState({
-        "date": null,
-        "method": null,
-        "payto": null,
-        "category": null,
-        "amount": null,
-        "type": 0,
-        "description": null,
-        "tag": null
-    })
-
+const AddExpense = ({ handleOk, fetch }) => {
+    const {state, dispatcher} = useData();
+    const [formData, setFormData] = useState(dummyData)
     const onClear = () => {
-        setFormData({
-            "date": null,
-            "method": null,
-            "payto": null,
-            "category": null,
-            "amount": null,
-            "description": null,
-            "type": 0,
-            "tag": null
-        })
+        setFormData(dummyData)
     }
 
-
+    const onSubmit = () => {
+        submitExpensedata(formData);
+        setFormData(dummyData)
+        handleOk();
+        dispatcher({type: 'updateState'})
+    }
     useEffect(() => { }, [formData])
     return (
         <>
@@ -97,7 +84,7 @@ const AddExpense = ({ handleOk, typeData }) => {
                             placeholder="Select type"
                             size="large"
                             style={{ width: "100%" }}
-                            options={typeData}
+                            options={state.typeData}
                             name="payto"
                             onChange={(e) => {
                                 // console.log(typeData);
@@ -138,7 +125,7 @@ const AddExpense = ({ handleOk, typeData }) => {
                     <Col flex="100%" className='mt-4'>
                         <Row justify="end" gutter={[16, 16]}>
                             <Col span={24}>
-                                <Button style={{ width: "100%" }} type='primary'>
+                                <Button style={{ width: "100%" }} type='primary' onClick={() => onSubmit()} >
                                     Save
                                 </Button>
                             </Col>
