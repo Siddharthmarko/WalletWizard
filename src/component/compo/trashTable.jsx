@@ -26,7 +26,7 @@ export default function getTrashTable(typeData){
             dataIndex: 'description',
             key: 'description',
             width: "auto",
-            render: (description) => (<Input value={description}  />)
+            description: 'description',
         },
         {
             title: 'Date',
