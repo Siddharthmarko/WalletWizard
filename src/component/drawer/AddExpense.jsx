@@ -6,11 +6,11 @@ import { useData } from '../../context/context';
 import { submitExpensedata } from '../../context/operation';
 
 const { TextArea } = Input;
-const dummyData = { "date": null, "method": null, "payto": null, "category": null, "amount": null, "description": null, "type": 0, "tag": null }
+const dummyData = { "date": null, "method": null, "payto": null, "category": null, "amount": null, "description": null, "type": 0 }
 
 const categoryList = Category
 
-const AddExpense = ({ handleOk, fetch }) => {
+const AddExpense = ({ handleOk }) => {
     const {state, dispatcher} = useData();
     const [formData, setFormData] = useState(dummyData)
     const onClear = () => {

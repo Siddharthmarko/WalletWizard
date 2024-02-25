@@ -9,7 +9,7 @@ import AddExpense from "./drawer/AddExpense";
 import AddType from "./drawer/AddType";
 import Trash from "./modal/Trash";
 import {  getExpenseType } from "../context/operation";
-import { details, setChartLevel, setOutputArray, setResult } from "../context/methods";
+import { setResult } from "../context/methods";
 
 const BASE_URL = process.env.BASE_URL;
 
@@ -17,16 +17,11 @@ export default function Home(){
     const {state, dispatcher} = useData();
     const columns = getMainColumn();
     function handleOk(){
-        dispatcher({type: 'update', id: null});
         dispatcher({ type: 'closeAll' });
-        // console.log(state);
-    }
-    function handleDeleteModal(){
-        dispatcher({ type: 'isisDeleteModal'});
-        getExpenseType(dispatcher);
-    }
+     }
 
     const fetchData = () => {
+        dispatcher({ type: 'loading' });
         getExpenseType(dispatcher);
         axios.post(`${BASE_URL}/expense-data-filter`, state.datefilter)
         .then((res) => {
@@ -35,23 +30,11 @@ export default function Home(){
                 const obj = { ...e, "no": i + 1 }
                 return obj;
             }) : [];
+            const [Profit, Expense] = setResult(updateObj);
+            
             dispatcher({ type: 'data', data: updateObj });
-
-            // console.log(updateObj)
-            dispatcher({ type: 'loading'});
-            const charLevel = setChartLevel(updateObj);
-            const outputArray = setOutputArray(charLevel);
-            const detail = details(outputArray);
-
-            dispatcher({type: 'detail', data: detail});
-            const result = setResult(updateObj);
-
-            const Profit = result.profit.reduce((acc, cur) => acc + parseInt(cur.amount), 0);
-            const Expense = result.loss.reduce((acc, cur) => acc + parseInt(cur.amount), 0);
-
             dispatcher({type: 'profit', data: Profit});
             dispatcher({type: 'expense', data: Expense});
-            
             dispatcher({ type: 'loading'});
         }).catch((err) => console.log(err));
     }
@@ -94,16 +77,6 @@ export default function Home(){
             >
                 <AddType handleOk={handleOk} />
             </Drawer>
-            <Modal 
-                title="Delete"
-                open={state.isDeleteModal}
-                onOk={handleDeleteModal}
-                onCancel={handleDeleteModal}
-            >
-                <span className='text-danger fs-6'>
-                    Are you sure to delete
-                </span>
-            </Modal>
             <Drawer
                 placement={"bottom"}
                 closable={false}

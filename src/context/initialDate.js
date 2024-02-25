@@ -14,9 +14,7 @@ export const initially = {
     expense: 0,
     datefilter: { ...dummyDates },
     calculate: { "Profit": 0, "Expense": 0 },
-    update: null,
     typeData: [],
     data:[],
-    detail: [],
     updateState: false,
 }

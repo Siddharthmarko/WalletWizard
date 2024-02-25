@@ -9,6 +9,7 @@ export default function getMainColumn(){
     const {state, dispatcher} = useData();
     function showDeleteModal(id) {
         deleteData(id);
+        dispatcher({ type: 'isisDeleteModal' });
         dispatcher({type: 'updateState'});
     }
     return [
@@ -93,7 +94,7 @@ export default function getMainColumn(){
             render: (e) => (<Row gutter={[8, 8]} justify="space-around">
                 <Col>
                     <Button size='small' type='text' shape='circle' onClick={() => {
-                        console.log(e);
+                        // console.log(e);
                         showDeleteModal(e._id)
                     }}>
                         <BiTrash className='fs-6' />

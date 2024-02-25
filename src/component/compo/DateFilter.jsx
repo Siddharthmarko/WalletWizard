@@ -35,7 +35,9 @@ const DateFilter = () => {
                 "endDate": dateStrings[1]
             }} 
             )
+            dispatcher({ type: 'updateState'});
             console.log(state.datefilter);
+
         } 
     };
     return (

@@ -19,7 +19,7 @@ router.get('/expense-data-trash', async (req, res, next) => {
 router.get('/expense-data-type', async (req, res, next) => {
     try {
         const result = await LogType.find().exec();
-        console.log(result);
+        // console.log(result);
         const output = result.map((item) => ({
             value: item._id, 
             label: item.description
@@ -99,14 +99,14 @@ router.delete("/expense-data/hard-delete/:id", async (req, res, next) => {
 router.post("/expense-data-filter", async (req, res, next) => {
     try {
         const { startDate, endDate } = req.body;
-        
+        console.log(startDate, endDate);
         const result = await Log.find({
             date: { $gte: startDate, $lt: endDate }, 
             trash: 0 
         })
             .sort({ date: -1 }) 
             .exec();
-        console.log(result);
+        // console.log(result);
         res.status(200).json(result);
     } catch (error) {
         console.error(error);
@@ -130,18 +130,8 @@ router.post("/expense-data", async (req, res, next) => {
 
 router.post("/update-expense-data", async (req, res, next) => {
     try {
-        // const { date, method, payto, category, amount, description, tag, id, type } = req.body;
+
         const updateData = req.body;
-
-        // if (method) updateData.method = method;
-        // if (payto) updateData.payto = payto;
-        // if (category) updateData.category = category;
-        // if (amount) updateData.amount = amount;
-        // if (description) updateData.description = description;
-        // if (tag) updateData.tag = tag;
-        // if (date) updateData.date = date;
-        // if (type) updateData.type = type;
-
         await Log.findByIdAndUpdate(updateData.id, updateData); 
         res.status(200).json({ message: "ok" });
     } catch (error) {
